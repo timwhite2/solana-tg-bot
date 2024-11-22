@@ -1,0 +1,9 @@
+/target
+
+/.idea
+*.md
+.env
+plan.md
+bot.md
+analysis.md
+FEATURES.md
