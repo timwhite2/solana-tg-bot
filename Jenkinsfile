@@ -10,7 +10,11 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                branches: [[name: '*/main']],
+                userRemoteConfigs: [[
+                url: 'git@github.com:timwhite2/solana-tg-bot.git',
+                credentialsId: '1'
+                ]]])
             }
         }
         stage('Setup') {
