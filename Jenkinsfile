@@ -1,9 +1,8 @@
 pipeline {
-  agent {
-      docker {
-        image 'rust:latest'
-      }
+    agent {
+        table 'rust'
     }
+
 
   stages {
     stage('verify Cargo installation') {
