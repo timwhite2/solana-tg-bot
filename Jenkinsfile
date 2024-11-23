@@ -1,29 +1,51 @@
 pipeline {
     agent {
-        table 'rust'
+        docker {
+            image 'rust:latest'
+        }
     }
-
-
-  stages {
-    stage('verify Cargo installation') {
-      steps {
-        sh 'cargo --version'
-      }
+    environment {
+        CARGO_HOME = "${WORKSPACE}/.cargo"
     }
-    stage('compile') {
-      steps {
-        sh 'cargo build'
-      }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Setup') {
+            steps {
+                sh '''
+                rustup update
+                cargo update
+                '''
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'cargo build --release'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'cargo test'
+            }
+        }
+        stage('Run') {
+            steps {
+                sh 'cargo run --release'
+            }
+        }
     }
-    stage('run manually') {
-      steps {
-        sh './target/debug/hello'
-      }
+    post {
+        always {
+            sh 'cargo clean'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
     }
-    stage('run with Cargo') {
-      steps {
-        sh 'cargo run'
-      }
-    }
-  }
 }
